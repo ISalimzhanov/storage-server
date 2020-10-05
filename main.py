@@ -1,6 +1,24 @@
-from storage_server.storageServer import StorageServer
+import argparse
+import os
+from threading import Thread
+from API.client import Client
+from API.server import Server
+from config import ns_host, ns_port
 
 if __name__ == '__main__':
-    ss = StorageServer('temp')
-    operation_desc = {'type': 'smth', 'requester': '0.0.0.0'}
-    ss.delete('name/file.txt')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s_host", help="server's address", type=str)
+    parser.add_argument("-s_port", help="server's port", type=int)
+    args = parser.parse_args()
+    os.environ['s_host'] = args.s_host
+    os.environ['s_port'] = str(args.s_port)
+    os.environ['ns_host'] = ns_host  # toDo
+    os.environ['ns_port'] = ns_port  # toDo
+
+    server = Server()
+    thread = Thread(target=server.launch)
+    print('Server launched')
+    thread.start()
+
+    # client = Client() toDO
+    # client.register() toDo

@@ -1,5 +1,6 @@
 import json
 import os
+from config import operation_types
 
 
 class Receipt:
@@ -21,7 +22,7 @@ class Receipt:
     @staticmethod
     def check_operation(operation_desc: dict) -> bool:
         try:
-            if type(operation_desc['type']) != str or type(operation_desc['requester']) != str:
+            if type(operation_desc['type']) in operation_types or type(operation_desc['requester']) != str:
                 return False
             return True
         except KeyError:

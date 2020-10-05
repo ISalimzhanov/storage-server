@@ -4,19 +4,19 @@ from typing import Optional
 import json
 from storage_server.receipt import Receipt
 from queue import Queue
+from config import ss_dir
 
 
 class StorageServer:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
-        dir = kwargs.get('directory')
         if not StorageServer._instance:
             StorageServer._instance = super(StorageServer, cls).__new__(cls)
         return StorageServer._instance
 
-    def __init__(self, directory: str):
-        self.dir = directory
+    def __init__(self):
+        self.dir = ss_dir
         try:
             os.mkdir(self.dir)
             self._storage = []
@@ -135,7 +135,7 @@ class StorageServer:
         del self[receipt]
         self.clear_path(storage_path)
 
-    def moving(self, src_path: str, dest_path: str, operation_desc: dict) -> None:
+    def move(self, src_path: str, dest_path: str, operation_desc: dict) -> None:
         if src_path not in self:
             raise ValueError
         receipt = self[src_path]
