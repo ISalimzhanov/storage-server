@@ -1,8 +1,6 @@
 import argparse
 import os
 from threading import Thread
-from API.client import Client
-from API.server import Server
 from config import ns_host, ns_port
 
 if __name__ == '__main__':
@@ -13,12 +11,13 @@ if __name__ == '__main__':
     os.environ['s_host'] = args.s_host
     os.environ['s_port'] = str(args.s_port)
     os.environ['ns_host'] = ns_host  # toDo
-    os.environ['ns_port'] = ns_port  # toDo
+    os.environ['ns_port'] = str(ns_port)  # toDo
 
-    server = Server()
-    thread = Thread(target=server.launch)
+    from API.client import client
+    from API.server import server
+
+    # client.call('register')
+
+    thread = Thread(target=server.start)
     print('Server launched')
     thread.start()
-
-    # client = Client() toDO
-    # client.register() toDo
