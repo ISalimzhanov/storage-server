@@ -2,6 +2,8 @@ import argparse
 import os
 from threading import Thread
 
+from storage_server.storage import Storage
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-ss_host", help="storage server's IPv4 address", type=str)

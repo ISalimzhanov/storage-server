@@ -22,8 +22,23 @@ class Storage:
     def __len__(self) -> int:
         return len(self._content)
 
-    def __getitem__(self, path: str) -> int:
-        return self._content.index(path)
+    def __contains__(self, path: str) -> bool:
+        try:
+            self._content.index(path)
+            return True
+        except ValueError:
+            return False
+
+    def __getitem__(self, path: str) -> str:
+        idx = self._content.index(path)
+        return self._content[idx]
+
+    def __iter__(self):
+        return self._content.__iter__()
+
+    def __setitem__(self, src_path: str, dest_path: str) -> None:
+        idx = self._content.index(src_path)
+        self._content[idx] = dest_path
 
     def __delitem__(self, path: str) -> None:
         self._content.remove(path)
@@ -36,14 +51,16 @@ class Storage:
         fnames = []
         q = Queue()
         for path in os.listdir(self.dir):
-            if os.path.isdir(path):
+            storage_path = f'{self.dir}/{path}'
+            if os.path.isdir(storage_path):
                 q.put(path)
             else:
                 fnames.append(path)
         while not q.empty():
-            cur_dir = q.get()  # dfs path to current directory
-            for path in os.listdir(cur_dir):
-                dfs_path = f'{cur_dir}/{path}'
+            dfs_dir = q.get()  # dfs path to current directory
+            storage_dir = f'{self.dir}/{dfs_dir}'  # storage path to current directory
+            for path in os.listdir(storage_dir):
+                dfs_path = f'{dfs_dir}/{path}'
                 if os.path.isdir(dfs_path):
                     q.put(dfs_path)
                 else:
@@ -96,7 +113,7 @@ class Storage:
         :return:
         """
         dirs: list = path.split('/')[1:-1]  # self.dir should not be deleted
-        path_dir = self.dir
+        path_dir = self.dir  # path from storage directory
         for i in range(len(dirs)):
             path_dir = f'{path_dir}/{dirs[i]}'
             dirs[i] = path_dir
@@ -122,6 +139,7 @@ class Storage:
         src_storage_path = f'{self.dir}/{src_path}'
         self.build_path(dest_storage_path)
         shutil.move(src_storage_path, dest_storage_path)
+        self[src_path] = dest_path
         self.clear_path(src_storage_path)
 
     def ls(self) -> list:
