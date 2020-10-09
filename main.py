@@ -1,8 +1,6 @@
 import argparse
 import os
-import sys
 
-import msgpackrpc
 from msgpackrpc.error import RPCError
 
 if __name__ == '__main__':
@@ -21,15 +19,6 @@ if __name__ == '__main__':
     os.environ['ns_host'] = args.ns_host
     os.environ['ns_port'] = str(args.ns_port)
 
-    from API.client import register
     from API.server import launch_server
-
-    while True:
-        try:
-            register()
-            break
-        except RPCError:
-            print('register failed')
-            continue
 
     launch_server()
