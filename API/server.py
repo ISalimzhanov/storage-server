@@ -1,12 +1,12 @@
 from threading import Thread
 from storage_server.storage import Storage
-import msgpackrpc
-import os
+from flask import Flask, request, Response
+
+app = Flask(__name__)
 
 
 class ServerService(object):
-    def __init__(self):
-        self.storage = Storage()
+    storage = Storage()
 
     def ping(self) -> None:
         return None
@@ -35,11 +35,40 @@ class ServerService(object):
             self.storage.delete(path)
 
 
+@app.route('/', methods=['POST'])
+def handler():
+    req = request.get_data().decode('utf-8')
+    ss = ServerService()
+    switch_map = {
+        'ping': lambda x: x.ping(),
+        'init': lambda x: x.init(),
+        'create': lambda x, id: x.create(id),
+        'write': lambda x, id, content: x.write(id, content),
+        'read': lambda x, id: x.read(id),
+        'delete': lambda x, id: x.delete(id)
+    }
+    result = None
+    try:
+        if req['method'] == 'ping':
+            result = ss.ping()
+        elif req['method'] == 'init':
+            result = ss.init()
+        elif req['method'] == 'create':
+            result = ss.create(req['params']['id'])
+        elif req['method'] == 'write':
+            result = ss.create(req['params']['id'])
+        elif req['method'] == 'read':
+            result = ss.create(req['params']['id'])
+        elif req['method'] == 'delete':
+            result = ss.delete(req['params']['id'])
+        response = {'jsonrpc': '2.0', 'result': result, 'success': True}
+    except Exception:
+        response = {'jsonrpc': '2.0', 'error': 'something went wrong', 'success': False}
+    return Response(response, 200)
+
+
 def launch_server() -> tuple:
-    address = msgpackrpc.Address(os.environ['ss_host'], int(os.environ['ss_port']))
-    server = msgpackrpc.Server(ServerService())
-    server.listen(address)
-    thread = Thread(target=server.start)
+    thread = Thread(target=app.run, args=(os.environ['ss_host'], os.environ['ss_port']))
     print(f"Server launched at {os.environ['ss_host']} on port {os.environ['ss_port']}")
     thread.start()
-    return address, server, thread
+    return app, thread
