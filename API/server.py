@@ -34,9 +34,8 @@ class ServerService(object):
 
 
 @app.route('/', methods=['POST'])
-def handler(data: bytes):
-    # req_body = msgpack.unpackb(request.get_data(), use_list=False)
-    req_body = msgpack.unpackb(data, use_list=False)
+def handler():
+    req_body = msgpack.unpackb(request.get_data(), use_list=False)
     ss = ServerService()
     result = None
     try:
