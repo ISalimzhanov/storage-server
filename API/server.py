@@ -62,8 +62,7 @@ def handler():
 
 
 def launch_server() -> tuple:
-    app.run(debug=True)
-    # thread = Thread(target=app.run, args=(os.environ['ss_host'], os.environ['ss_port']))
-    # print(f"Server launched at {os.environ['ss_host']} on port {os.environ['ss_port']}")
-    # thread.start()
-    # return app, thread
+    thread = Thread(target=app.run, args=(os.environ['ss_host'], os.environ['ss_port']))
+    print(f"Server launched at {os.environ['ss_host']} on port {os.environ['ss_port']}")
+    thread.start()
+    return app, thread
