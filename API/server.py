@@ -1,5 +1,6 @@
 from threading import Thread
 from storage_server.storage import Storage
+import msgpack
 from flask import Flask, request, Response
 import os
 
@@ -36,32 +37,24 @@ class ServerService(object):
             self.storage.delete(path)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET'])
 def handler():
-    req = request.get_data().decode('utf-8')
+    req_body = msgpack.unpackb(request.get_data(), use_list=False)
     ss = ServerService()
-    switch_map = {
-        'ping': lambda x: x.ping(),
-        'init': lambda x: x.init(),
-        'create': lambda x, id: x.create(id),
-        'write': lambda x, id, content: x.write(id, content),
-        'read': lambda x, id: x.read(id),
-        'delete': lambda x, id: x.delete(id)
-    }
     result = None
     try:
-        if req['method'] == 'ping':
+        if req_body['method'] == 'ping':
             result = ss.ping()
-        elif req['method'] == 'init':
+        elif req_body['method'] == 'init':
             result = ss.init()
-        elif req['method'] == 'create':
-            result = ss.create(req['params']['id'])
-        elif req['method'] == 'write':
-            result = ss.create(req['params']['id'])
-        elif req['method'] == 'read':
-            result = ss.create(req['params']['id'])
-        elif req['method'] == 'delete':
-            result = ss.delete(req['params']['id'])
+        elif req_body['method'] == 'create':
+            result = ss.create(req_body['params']['id'])
+        elif req_body['method'] == 'write':
+            result = ss.create(req_body['params']['id'])
+        elif req_body['method'] == 'read':
+            result = ss.create(req_body['params']['id'])
+        elif req_body['method'] == 'delete':
+            result = ss.delete(req_body['params']['id'])
         response = {'jsonrpc': '2.0', 'result': result, 'success': True}
     except Exception:
         response = {'jsonrpc': '2.0', 'error': 'something went wrong', 'success': False}
@@ -69,7 +62,8 @@ def handler():
 
 
 def launch_server() -> tuple:
-    thread = Thread(target=app.run, args=(os.environ['ss_host'], os.environ['ss_port']))
-    print(f"Server launched at {os.environ['ss_host']} on port {os.environ['ss_port']}")
-    thread.start()
-    return app, thread
+    app.run(debug=True)
+    # thread = Thread(target=app.run, args=(os.environ['ss_host'], os.environ['ss_port']))
+    # print(f"Server launched at {os.environ['ss_host']} on port {os.environ['ss_port']}")
+    # thread.start()
+    # return app, thread
