@@ -44,17 +44,17 @@ def handler():
     result = None
     try:
         if req_body['method'] == 'ping':
-            result = ss.ping()
+            ss.ping()
         elif req_body['method'] == 'init':
             result = {'spaceAvailable': ss.init()}
         elif req_body['method'] == 'create':
-            result = ss.create(req_body['params']['id'])
+            ss.create(req_body['params']['id'])
         elif req_body['method'] == 'write':
-            result = ss.create(req_body['params']['id'])
+            ss.create(req_body['params']['id'])
         elif req_body['method'] == 'read':
-            result = ss.create(req_body['params']['id'])
+            result = {'contents': ss.create(req_body['params']['id'])}
         elif req_body['method'] == 'delete':
-            result = ss.delete(req_body['params']['id'])
+            ss.delete(req_body['params']['id'])
         response = {'jsonrpc': '2.0', 'result': result, 'success': True, 'type': req_body['method']}
     except Exception:
         response = {'jsonrpc': '2.0', 'error': 'something went wrong', 'success': False, 'type': req_body['method']}
