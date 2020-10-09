@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 from queue import Queue
 
 
@@ -13,42 +14,42 @@ class Storage:
 
     def __init__(self):
         self.dir = os.environ['ss_dir']
+        self.__cap = int(os.environ['ss_cap'])
         try:
             os.mkdir(self.dir)
-            self._content = []
+            self.__content = []
         except FileExistsError:
-            self._content = self.__get_files()
+            self.__content, size = self.__get_info()
+            if self.__cap < size:
+                raise AttributeError
+            self.__cap -= size
 
     def __len__(self) -> int:
-        return len(self._content)
+        return len(self.__content)
 
     def __contains__(self, path: str) -> bool:
         try:
-            self._content.index(path)
+            self.__content.index(path)
             return True
         except ValueError:
             return False
 
-    def __getitem__(self, path: str) -> str:
-        idx = self._content.index(path)
-        return self._content[idx]
-
     def __iter__(self):
-        return self._content.__iter__()
+        return self.__content.__iter__()
 
     def __setitem__(self, src_path: str, dest_path: str) -> None:
-        idx = self._content.index(src_path)
-        self._content[idx] = dest_path
+        idx = self.__content.index(src_path)
+        self.__content[idx] = dest_path
 
     def __delitem__(self, path: str) -> None:
-        self._content.remove(path)
+        self.__content.remove(path)
 
-    def __get_files(self) -> list:
+    def __get_info(self) -> tuple:
         """
-        Get all filenames from storage
-        :return: list of filenames
+        :return: (list of filenames, size occupied)
         """
         fnames = []
+        size = 0
         q = Queue()
         for path in os.listdir(self.dir):
             storage_path = f'{self.dir}/{path}'
@@ -56,6 +57,7 @@ class Storage:
                 q.put(path)
             else:
                 fnames.append(path)
+                size += os.path.getsize(storage_path)
         while not q.empty():
             dfs_dir = q.get()  # dfs path to current directory
             storage_dir = f'{self.dir}/{dfs_dir}'  # storage path to current directory
@@ -65,11 +67,12 @@ class Storage:
                     q.put(dfs_path)
                 else:
                     fnames.append(dfs_path)
-        return fnames
+                    size += os.path.getsize(dfs_path)
+        return fnames, size
 
     def read(self, path: str) -> bytes:
         if path not in self:
-            raise ValueError
+            raise FileNotFoundError
         storage_path = f'{self.dir}/{path}'
         with open(storage_path, 'rb') as file:
             data = file.read()
@@ -77,11 +80,14 @@ class Storage:
 
     def write(self, path: str, data: bytes) -> None:
         if path in self:
-            raise ValueError
+            raise FileExistsError
+        if self.__cap < sys.getsizeof(data):
+            raise OSError
+        self.__cap -= sys.getsizeof(data)
         storage_path = f'{self.dir}/{path}'
         with open(storage_path, 'wb') as file:
             file.write(data)
-        self._content.append(path)
+        self.__content.append(path)
 
     def build_path(self, storage_path: str) -> None:
         """
@@ -99,12 +105,12 @@ class Storage:
 
     def create(self, path: str) -> None:
         if path in self:
-            raise ValueError
+            raise FileExistsError
         storage_path = f'{self.dir}/{path}'
         self.build_path(storage_path)
         file = open(storage_path, 'w')
         file.close()
-        self._content.append(path)
+        self.__content.append(path)
 
     def clear_path(self, path: str) -> None:
         """
@@ -126,15 +132,16 @@ class Storage:
 
     def delete(self, path: str) -> None:
         if path not in self:
-            raise ValueError
+            raise FileNotFoundError
         storage_path = f'{self.dir}/{path}'
-        os.remove(storage_path)
+        self.__cap += os.path.getsize(storage_path)
         del self[path]
+        os.remove(storage_path)
         self.clear_path(storage_path)
 
     def move(self, src_path: str, dest_path: str) -> None:
         if src_path not in self:
-            raise ValueError
+            raise FileNotFoundError
         dest_storage_path = f'{self.dir}/{dest_path}'
         src_storage_path = f'{self.dir}/{src_path}'
         self.build_path(dest_storage_path)
@@ -145,8 +152,5 @@ class Storage:
     def ls(self) -> list:
         return [fname for fname in self]
 
-    def file_size(self, path: str) -> int:
-        if path not in self:
-            raise ValueError
-        storage_path = f'{self.dir}/{path}'
-        return os.path.getsize(storage_path)
+    def available_space(self) -> int:
+        return self.__cap
