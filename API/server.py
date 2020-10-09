@@ -55,10 +55,10 @@ def handler():
             result = ss.create(req_body['params']['id'])
         elif req_body['method'] == 'delete':
             result = ss.delete(req_body['params']['id'])
-        response = {'jsonrpc': '2.0', 'result': result, 'success': True, }
+        response = {'jsonrpc': '2.0', 'result': result, 'success': True}
     except Exception:
-        response = {'jsonrpc': '2.0', 'error': 'something went wrong', 'success': False}
-    return msgpack.packb(response)
+        response = {'jsonrpc': '2.0', 'error': 'something went wrong', 'success': False, 'result': None}
+    return Response(str(response), 200)
 
 
 def launch_server() -> tuple:
