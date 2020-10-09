@@ -46,7 +46,7 @@ def handler():
         if req_body['method'] == 'ping':
             result = ss.ping()
         elif req_body['method'] == 'init':
-            result = ss.init()
+            result = {'spaceAvailable': ss.init()}
         elif req_body['method'] == 'create':
             result = ss.create(req_body['params']['id'])
         elif req_body['method'] == 'write':
