@@ -1,8 +1,8 @@
-###Running:
+### Running:
 1) Build docker image from Dockerfile
 
 
-###Communication:
+### Communication:
 **MsgpackRPC**<br>
 Files are looked up and named by their **IDs** on Naming server's database<br>
 **Calls:**<br>
@@ -12,7 +12,7 @@ write(id: str, contents) - create file filled by the data <br>
 read(id: str) - read data at the file <br>
 delete(ids: list) - delete files <br>
 
-###Running<br>
+### Running<br>
 1) docker-compose up -d<br>
 2) docker exec storageserver python main.py [args]<br>
 Where **args** are:<br>
