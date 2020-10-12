@@ -7,30 +7,30 @@ import os
 app = Flask(__name__)
 
 
-class ServerService(object):
-    storage = Storage()
+class ServerService:
+    _storage = Storage()
 
     def ping(self) -> None:
         return None
 
     def init(self) -> int:
-        return self.storage.available_space()
+        return self._storage.available_space()
 
     def create(self, id: str) -> None:
-        self.storage.create(id)
+        self._storage.create(id)
 
     def write(self, id: str, contents: bytes) -> None:
-        self.storage.write(id, contents)
+        self._storage.write(id, contents)
 
     def read(self, id: str) -> bytes:
-        return self.storage.read(id)
+        return self._storage.read(id)
 
     def delete(self, ids: list) -> None:
         for id in ids:
             if type(id) != str:
                 raise ValueError
         for id in ids:
-            self.storage.delete(id)
+            self._storage.delete(id)
 
 
 @app.route('/', methods=['POST'])
