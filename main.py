@@ -1,6 +1,9 @@
 import argparse
 import os
+import sys
 import time
+
+import requests
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -28,9 +31,11 @@ if __name__ == '__main__':
     ns_awared = False  # is NS server about the fact that this SS server is launched
     while not ns_awared:
         try:
-            ns_awared = connect()
-        except FileNotFoundError:
-            ns_awared = register(connector)
-        time.sleep(timeout)
-
+            try:
+                ns_awared = connect()
+            except FileNotFoundError:
+                ns_awared = register(connector)
+            time.sleep(timeout)
+        except requests.exceptions.ConnectionError:
+            sys.exit(f'Naming Server {os.environ["ns_host"]} at port {os.environ["ns_port"]} is unavailable')
     launch_server()
