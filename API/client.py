@@ -1,7 +1,7 @@
 import msgpack
 import requests
+from requests import Response
 import os
-from flask import Response
 
 
 def register(connector: str) -> bool:
@@ -9,7 +9,7 @@ def register(connector: str) -> bool:
     req_data = msgpack.packb(req)
     response: Response = requests.post(f'http://{os.environ["ns_host"]}:{os.environ["ns_port"]}/api/replica',
                                        data=req_data, headers={'content-type': 'application/msgpack'})
-    response_data = msgpack.unpackb(response.get_data())
+    response_data = msgpack.unpackb(response.content)
     if response_data['success']:
         with open('id', 'w') as file:
             file.write(response_data['id'])
@@ -24,5 +24,5 @@ def connect(connector: str) -> bool:
     req_data = msgpack.packb(req)
     response: Response = requests.post(f'http://{os.environ["ns_host"]}:{os.environ["ns_port"]}/api/replica',
                                        data=req_data, headers={'content-type': 'application/msgpack'})
-    response_data = msgpack.unpackb(response.get_data())
+    response_data = msgpack.unpackb(response.content)
     return response_data['success']
