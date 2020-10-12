@@ -4,6 +4,8 @@ import sys
 
 import requests
 
+from storage_server.storage import Storage
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-ss_host", help="storage server's IPv4 address", type=str)
@@ -25,6 +27,9 @@ if __name__ == '__main__':
 
     from API.server import launch_server
     from API.client import connect, register
+
+    ss = Storage()
+    print(ss.clear())
 
     try:
         try:
