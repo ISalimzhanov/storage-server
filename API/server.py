@@ -8,33 +8,72 @@ app = Flask(__name__)
 
 
 class ServerService:
+    """
+    Class which defines server services
+    Storage, which assigned to Storage Server
+    Is Flat (do work with directories)
+    It, actually, works with files ID
+    In the Naming Server's database
+    Providing ids is the job of NS
+    """
     _storage = Storage()
 
     def ping(self) -> None:
+        """
+        :return:
+        """
         return None
 
     def init(self) -> int:
-        return self._storage.available_space()
+        """
+        Clear storage
+        :return: available size in clear storage
+        """
+        self._storage.clear()
+        return len(self._storage)
 
     def create(self, id: str) -> None:
-        self._storage.create(id)
+        """
+        Create empty file
+        :param id: file id in NS's database
+        :return:
+        """
+        self._storage[id] = b''
 
     def write(self, id: str, contents: bytes) -> None:
-        self._storage.write(id, contents)
+        """
+        Create file by the data
+        :param id: file id in NS's database
+        :param contents: data in byte format
+        :return:
+        """
+        self._storage[id] = contents
 
     def read(self, id: str) -> bytes:
-        return self._storage.read(id)
+        """
+        :param id: file id in NS's database
+        :return: data inside file
+        """
+        return self._storage[id]
 
     def delete(self, ids: list) -> None:
+        """
+        :param ids: files ids in NS's database
+        :return:
+        """
         for id in ids:
             if type(id) != str:
                 raise ValueError
         for id in ids:
-            self._storage.delete(id)
+            del self._storage[id]
 
 
 @app.route('/', methods=['POST'])
 def handler():
+    """
+    Stub and marshalling of MsgpackRPC
+    :return: MsgpackRPC Response
+    """
     req_body = msgpack.unpackb(request.get_data(), use_list=False)
     ss = ServerService()
     result = None
@@ -58,6 +97,9 @@ def handler():
 
 
 def launch_server() -> tuple:
+    """
+    :return: thread where server running, Flask's app
+    """
     thread = Thread(target=app.run, args=(os.environ['ss_host'], os.environ['ss_port']))
     print(f"Server launched at {os.environ['ss_host']} on port {os.environ['ss_port']}")
     thread.start()
