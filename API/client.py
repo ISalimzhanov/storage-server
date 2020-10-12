@@ -17,10 +17,10 @@ def register(connector: str) -> bool:
     return False
 
 
-def connect() -> bool:
+def connect(connector: str) -> bool:
     with open('id', 'r') as file:
         id = file.read()
-    req = {'jsonrpc': '2.0', 'method': 'replica.register', 'params': {'id': id}}
+    req = {'jsonrpc': '2.0', 'method': 'replica.register', 'params': {'id': id, 'connector': connector}}
     req_data = msgpack.packb(req)
     response: Response = requests.post(f'http://{os.environ["ns_host"]}:{os.environ["ns_port"]}/api/replica',
                                        data=req_data, headers={'content-type': 'application/msgpack'})

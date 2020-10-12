@@ -32,7 +32,7 @@ if __name__ == '__main__':
     while not ns_awared:
         try:
             try:
-                ns_awared = connect()
+                ns_awared = connect(connector)
             except FileNotFoundError:
                 ns_awared = register(connector)
             time.sleep(timeout)
