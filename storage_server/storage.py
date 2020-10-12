@@ -103,7 +103,7 @@ class Storage:
 
     def __get_info(self) -> tuple:
         """
-        :return: (list of DFS filenames, size occupied)
+        :return: (list of DFS filenames that stored on that storage, size occupied)
         """
         fnames = []
         size = 0
