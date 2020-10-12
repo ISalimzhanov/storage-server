@@ -1,7 +1,6 @@
 import argparse
 import os
 import sys
-import time
 
 import requests
 
@@ -27,15 +26,15 @@ if __name__ == '__main__':
     from API.server import launch_server
     from API.client import connect, register
 
-    timeout = 20
-    ns_awared = False  # is NS server about the fact that this SS server is launched
-    while not ns_awared:
+    try:
         try:
-            try:
-                ns_awared = connect(connector)
-            except FileNotFoundError:
-                ns_awared = register(connector)
-            time.sleep(timeout)
-        except requests.exceptions.ConnectionError:
-            sys.exit(f'Naming Server {os.environ["ns_host"]} at port {os.environ["ns_port"]} is unavailable')
+            ns_awared = connect(connector)
+        except FileNotFoundError:
+            ns_awared = register(connector)
+        if not ns_awared:
+            sys.exit(f'Naming Server {os.environ["ns_host"]} at port {os.environ["ns_port"]} '
+                     f'deny registration/connection')
+    except requests.exceptions.ConnectionError:
+        sys.exit(f'Naming Server {os.environ["ns_host"]} at port {os.environ["ns_port"]} is unavailable')
+
     launch_server()

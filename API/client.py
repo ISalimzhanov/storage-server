@@ -12,8 +12,8 @@ def register(connector: str) -> bool:
     response_data = msgpack.unpackb(response.content)
     if response_data['success']:
         with open('id', 'w') as file:
-            file.write(response_data['id'])
-        return True
+            file.write(response_data['result']['id'])
+        return TrueS
     return False
 
 
