@@ -3,7 +3,7 @@ version: "3"
 
 services:
   webapp:
-    image: 'thedeadferryman/innodsp1-webapp:latest'
+    image: '41694/dfs_storage'
     deploy:
       replicas: 3
       resources:
@@ -14,6 +14,6 @@ services:
         condition: on-failure
 
   nginx:
-    image: 'thedeadferryman/innodsp1-nginx:latest'
+    image: '41694/dfs_storage'
     ports:
     - 8080:80
