@@ -1,5 +1,5 @@
 from threading import Thread
-from storage_server.storage import Storage
+from storage.storage import Storage
 import msgpack
 from flask import Flask, request, Response
 import os

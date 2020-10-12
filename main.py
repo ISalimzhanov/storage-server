@@ -4,7 +4,7 @@ import sys
 
 import requests
 
-from storage_server.storage import Storage
+from storage.storage import Storage
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
