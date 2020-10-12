@@ -13,7 +13,7 @@ def register(connector: str) -> bool:
     if response_data['success']:
         with open('id', 'w') as file:
             file.write(response_data['result']['id'])
-        return TrueS
+        return True
     return False
 
 
