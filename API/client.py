@@ -8,7 +8,7 @@ def register(connector: str) -> bool:
     req = {'jsonrpc': '2.0', 'method': 'replica.register', 'params': {'connector': connector}}
     req_data = msgpack.packb(req)
     response: Response = requests.post(f'http://{os.environ["ns_host"]}:{os.environ["ns_port"]}/api/replica',
-                                       data=req_data)
+                                       data=req_data, content_type='application/msgpack')
     response_data = msgpack.unpackb(response.get_data())
     if response_data['success']:
         with open('id', 'w') as file:
@@ -23,6 +23,6 @@ def connect() -> bool:
     req = {'jsonrpc': '2.0', 'method': 'replica.register', 'params': {'id': id}}
     req_data = msgpack.packb(req)
     response: Response = requests.post(f'http://{os.environ["ns_host"]}:{os.environ["ns_port"]}/api/replica',
-                                       data=req_data)
+                                       data=req_data, content_type='application/msgpack')
     response_data = msgpack.unpackb(response.get_data())
     return response_data['success']
