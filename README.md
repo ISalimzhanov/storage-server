@@ -1,7 +1,3 @@
-### Running:
-1) Build docker image from Dockerfile
-
-
 ### Communication:
 **MsgpackRPC**<br>
 Files are looked up and named by their **IDs** on Naming server's database<br>
