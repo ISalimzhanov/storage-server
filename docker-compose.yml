@@ -3,7 +3,7 @@ version: "3"
 
 services:
   storageserver:
-    image: '41694/storage_server'
+    image: '41694/storage_server:first'
     deploy:
       replicas: 3
       resources:
@@ -14,6 +14,6 @@ services:
         condition: on-failure
 
   nginx:
-    image: '41694/storage_server'
+    image: '41694/storage_server:first'
     ports:
     - 8080:80
