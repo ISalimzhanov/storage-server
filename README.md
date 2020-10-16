@@ -9,8 +9,7 @@ read(id: str) - read data at the file <br>
 delete(ids: list) - delete files <br>
 
 ### Running<br>
-1) docker-compose up -d<br>
-2) docker exec storageserver python main.py [args]<br>
+1) docker run 41694/storage:first [args]
 Where **args** are:<br>
 "-ss_host" - storage server's IPv4 address<br>
 "-ss_port" - storage server's port<br>

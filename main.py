@@ -28,9 +28,6 @@ if __name__ == '__main__':
     from API.server import launch_server
     from API.client import connect, register
 
-    ss = Storage()
-    print(ss.clear())
-
     try:
         try:
             ns_awared = connect(connector)
