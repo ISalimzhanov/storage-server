@@ -4,8 +4,6 @@ import sys
 
 import requests
 
-from storage.storage import Storage
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-ss_host", help="storage server's IPv4 address", type=str)
@@ -38,5 +36,4 @@ if __name__ == '__main__':
                      f'deny registration/connection')
     except requests.exceptions.ConnectionError:
         sys.exit(f'Naming Server {os.environ["ns_host"]} at port {os.environ["ns_port"]} is unavailable')
-
     launch_server()
