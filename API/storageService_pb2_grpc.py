@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import storageServer_pb2 as storageServer__pb2
+import storageService_pb2 as storageService__pb2
 
 
 class StorageServiceStub(object):
@@ -16,33 +16,33 @@ class StorageServiceStub(object):
         """
         self.Ping = channel.unary_unary(
                 '/StorageService/Ping',
-                request_serializer=storageServer__pb2.ControlRequest.SerializeToString,
-                response_deserializer=storageServer__pb2.ControlReply.FromString,
+                request_serializer=storageService__pb2.ControlRequest.SerializeToString,
+                response_deserializer=storageService__pb2.ControlReply.FromString,
                 )
         self.Create = channel.unary_unary(
                 '/StorageService/Create',
-                request_serializer=storageServer__pb2.UpdateRequest.SerializeToString,
-                response_deserializer=storageServer__pb2.UpdateReply.FromString,
+                request_serializer=storageService__pb2.UpdateRequest.SerializeToString,
+                response_deserializer=storageService__pb2.UpdateReply.FromString,
                 )
         self.Write = channel.unary_unary(
                 '/StorageService/Write',
-                request_serializer=storageServer__pb2.UpdateRequest.SerializeToString,
-                response_deserializer=storageServer__pb2.UpdateReply.FromString,
+                request_serializer=storageService__pb2.UpdateRequest.SerializeToString,
+                response_deserializer=storageService__pb2.UpdateReply.FromString,
                 )
         self.Read = channel.unary_unary(
                 '/StorageService/Read',
-                request_serializer=storageServer__pb2.GetRequest.SerializeToString,
-                response_deserializer=storageServer__pb2.GetReply.FromString,
+                request_serializer=storageService__pb2.GetRequest.SerializeToString,
+                response_deserializer=storageService__pb2.GetReply.FromString,
                 )
         self.Delete = channel.unary_unary(
                 '/StorageService/Delete',
-                request_serializer=storageServer__pb2.DeleteRequest.SerializeToString,
-                response_deserializer=storageServer__pb2.UpdateReply.FromString,
+                request_serializer=storageService__pb2.DeleteRequest.SerializeToString,
+                response_deserializer=storageService__pb2.UpdateReply.FromString,
                 )
         self.Clear = channel.unary_unary(
                 '/StorageService/Clear',
-                request_serializer=storageServer__pb2.ControlRequest.SerializeToString,
-                response_deserializer=storageServer__pb2.ControlReply.FromString,
+                request_serializer=storageService__pb2.ControlRequest.SerializeToString,
+                response_deserializer=storageService__pb2.ControlReply.FromString,
                 )
 
 
@@ -90,33 +90,33 @@ def add_StorageServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Ping': grpc.unary_unary_rpc_method_handler(
                     servicer.Ping,
-                    request_deserializer=storageServer__pb2.ControlRequest.FromString,
-                    response_serializer=storageServer__pb2.ControlReply.SerializeToString,
+                    request_deserializer=storageService__pb2.ControlRequest.FromString,
+                    response_serializer=storageService__pb2.ControlReply.SerializeToString,
             ),
             'Create': grpc.unary_unary_rpc_method_handler(
                     servicer.Create,
-                    request_deserializer=storageServer__pb2.UpdateRequest.FromString,
-                    response_serializer=storageServer__pb2.UpdateReply.SerializeToString,
+                    request_deserializer=storageService__pb2.UpdateRequest.FromString,
+                    response_serializer=storageService__pb2.UpdateReply.SerializeToString,
             ),
             'Write': grpc.unary_unary_rpc_method_handler(
                     servicer.Write,
-                    request_deserializer=storageServer__pb2.UpdateRequest.FromString,
-                    response_serializer=storageServer__pb2.UpdateReply.SerializeToString,
+                    request_deserializer=storageService__pb2.UpdateRequest.FromString,
+                    response_serializer=storageService__pb2.UpdateReply.SerializeToString,
             ),
             'Read': grpc.unary_unary_rpc_method_handler(
                     servicer.Read,
-                    request_deserializer=storageServer__pb2.GetRequest.FromString,
-                    response_serializer=storageServer__pb2.GetReply.SerializeToString,
+                    request_deserializer=storageService__pb2.GetRequest.FromString,
+                    response_serializer=storageService__pb2.GetReply.SerializeToString,
             ),
             'Delete': grpc.unary_unary_rpc_method_handler(
                     servicer.Delete,
-                    request_deserializer=storageServer__pb2.DeleteRequest.FromString,
-                    response_serializer=storageServer__pb2.UpdateReply.SerializeToString,
+                    request_deserializer=storageService__pb2.DeleteRequest.FromString,
+                    response_serializer=storageService__pb2.UpdateReply.SerializeToString,
             ),
             'Clear': grpc.unary_unary_rpc_method_handler(
                     servicer.Clear,
-                    request_deserializer=storageServer__pb2.ControlRequest.FromString,
-                    response_serializer=storageServer__pb2.ControlReply.SerializeToString,
+                    request_deserializer=storageService__pb2.ControlRequest.FromString,
+                    response_serializer=storageService__pb2.ControlReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -140,8 +140,8 @@ class StorageService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/StorageService/Ping',
-            storageServer__pb2.ControlRequest.SerializeToString,
-            storageServer__pb2.ControlReply.FromString,
+            storageService__pb2.ControlRequest.SerializeToString,
+            storageService__pb2.ControlReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -157,8 +157,8 @@ class StorageService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/StorageService/Create',
-            storageServer__pb2.UpdateRequest.SerializeToString,
-            storageServer__pb2.UpdateReply.FromString,
+            storageService__pb2.UpdateRequest.SerializeToString,
+            storageService__pb2.UpdateReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -174,8 +174,8 @@ class StorageService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/StorageService/Write',
-            storageServer__pb2.UpdateRequest.SerializeToString,
-            storageServer__pb2.UpdateReply.FromString,
+            storageService__pb2.UpdateRequest.SerializeToString,
+            storageService__pb2.UpdateReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -191,8 +191,8 @@ class StorageService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/StorageService/Read',
-            storageServer__pb2.GetRequest.SerializeToString,
-            storageServer__pb2.GetReply.FromString,
+            storageService__pb2.GetRequest.SerializeToString,
+            storageService__pb2.GetReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -208,8 +208,8 @@ class StorageService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/StorageService/Delete',
-            storageServer__pb2.DeleteRequest.SerializeToString,
-            storageServer__pb2.UpdateReply.FromString,
+            storageService__pb2.DeleteRequest.SerializeToString,
+            storageService__pb2.UpdateReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -225,7 +225,7 @@ class StorageService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/StorageService/Clear',
-            storageServer__pb2.ControlRequest.SerializeToString,
-            storageServer__pb2.ControlReply.FromString,
+            storageService__pb2.ControlRequest.SerializeToString,
+            storageService__pb2.ControlReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -37,5 +37,5 @@ message GetReply{
 }
 
 message DeleteRequest{
-  repeated string filename = 1;
+  repeated string filenames = 1;
 }
